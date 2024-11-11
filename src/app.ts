@@ -16,6 +16,7 @@ import { requestLogger } from "./middlewares/requestLogger";
 import { notFoundHandler } from "./middlewares/notFountHandler";
 import { errorHandler } from "./middlewares/errorHandler";
 import { rateLimiterMiddleware } from "./middlewares/rateLimit";
+import { ROUTES } from "./constants/routePaths";
 
 const app = express();
 
@@ -37,7 +38,7 @@ app.use(express.static("public"));
 app.use(helmet());
 app.use(compression());
 
-app.use("/api", routes);
+app.use(ROUTES.APP.VERSION_1, routes);
 app.listen(PORT, () => {
   logger.info(`Server running in ${NODE_ENV} mode on port ${PORT}`);
 });

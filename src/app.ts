@@ -21,7 +21,18 @@ import { ROUTES } from "./constants/routePaths";
 const app = express();
 
 app.use(express.json());
-app.use(cors({ origin: "*" }));
+
+app.use(
+  cors({
+    origin: [
+      "*",
+      "http://localhost:5173",
+      "https://naveed-task-manager.netlify.app",
+    ],
+    credentials: true,
+  })
+);
+app.use(requestLogger);
 
 app.use(
   session({
@@ -37,8 +48,12 @@ app.use(express.static("public"));
 
 app.use(helmet());
 app.use(compression());
+app.use(rateLimiterMiddleware);
 
 app.use(ROUTES.APP.VERSION_1, routes);
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 app.listen(PORT, () => {
   logger.info(`Server running in ${NODE_ENV} mode on port ${PORT}`);
 });

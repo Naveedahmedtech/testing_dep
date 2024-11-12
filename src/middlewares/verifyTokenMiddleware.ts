@@ -6,13 +6,11 @@ import { ACCESS_CONTROL } from "../constants/routePaths";
 import prisma from "../prisma";
 import { ENV } from "../constants";
 
-
 export const verifyTokenMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  
   const token = req.cookies?.accessToken;
   if (!token) {
     return sendErrorResponse(res, "Access token is not provided.", 401);
@@ -34,8 +32,7 @@ export const verifyTokenMiddleware = async (
           404
         );
       }
-
-      req.user = {
+      (req as any).user = {
         token,
         decoded,
       };

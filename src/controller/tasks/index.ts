@@ -10,7 +10,8 @@ export const createTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
   const { title, description, priority, status, dueDate } = req.body;
 
   try {
@@ -40,7 +41,8 @@ export const getTasks = async (
   next: NextFunction
 ) => {
   const { page = 1, limit = 10, status, priority, search } = req.query;
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
 
   try {
     if (isDecodedWithId(decoded)) {
@@ -90,7 +92,8 @@ export const updateTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
   const { id } = req.params;
   const { title, description, priority, status, dueDate } = req.body;
 
@@ -130,7 +133,8 @@ export const deleteTask = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
 
   const { id } = req.params;
 
@@ -159,7 +163,8 @@ export const getUserTaskCounts = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
 
   try {
     if (isDecodedWithId(decoded)) {

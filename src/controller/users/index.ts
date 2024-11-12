@@ -65,7 +65,9 @@ export const getUserByToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { decoded } = req.user! || {};
+  const user = (req as any).user;
+  const { decoded } = user! || {};
+  console.log("decoded A BI YAAR 🤐😭", decoded);
   try {
     if (isDecodedWithId(decoded)) {
       const user = await prisma.user.findUnique({

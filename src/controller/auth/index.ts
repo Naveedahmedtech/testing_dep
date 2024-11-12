@@ -152,12 +152,12 @@ export const logout = async (
     res.cookie("accessToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: false,
+      sameSite: 'none',
     });
     res.cookie("refreshToken", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: false,
+      sameSite: 'none',
     });
 
     // Respond with success message and token

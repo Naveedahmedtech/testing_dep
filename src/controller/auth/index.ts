@@ -149,18 +149,21 @@ export const logout = async (
   next: NextFunction
 ) => {
   try {
-    res.cookie("accessToken", {
+    res.cookie("accessToken", "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: false,
-    });
-    res.cookie("refreshToken", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production" ? true : false,
-      sameSite: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      expires: new Date(0), 
     });
 
-    // Respond with success message and token
+    res.cookie("refreshToken", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      expires: new Date(0), 
+    });
+
+    // Respond with success message
     return sendSuccessResponse(res, "Logout Successfully!", {}, 200);
   } catch (error: any) {
     next(error);

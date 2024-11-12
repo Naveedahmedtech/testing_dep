@@ -1,0 +1,96 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String   @unique
+  password  String?
+  role      Role     @relation(fields: [roleId], references: [id])
+  roleId    String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Tasks assigned to the user
+  Task Task[]
+
+  // Manager-specific fields
+  overseenUsers Oversight[] @relation("ManagerOversight") // Users this manager oversees
+
+  // Regular User-specific field (one-to-one relation with a unique manager assignment)
+  assignedManager Oversight? @relation("UserManager")
+}
+
+model Oversight {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  manager   User     @relation("ManagerOversight", fields: [managerId], references: [id])
+  managerId String   @db.ObjectId
+  user      User     @relation("UserManager", fields: [userId], references: [id])
+  userId    String   @unique @db.ObjectId // Ensures one-to-one relationship for each user
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String           @unique
+  description String?
+  permissions RolePermission[] // Relation to RolePermission for many-to-many with Permission
+  users       User[] // Relation to User model for users with this role
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Permission {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String           @unique
+  description String?
+  roles       RolePermission[] // Relation to RolePermission for many-to-many with Role
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model RolePermission {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  role         Role       @relation(fields: [roleId], references: [id])
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  roleId       String     @db.ObjectId
+  permissionId String     @db.ObjectId
+}
+
+model Task {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  priority    Priority  @default(MEDIUM)
+  status      Status    @default(PENDING)
+  dueDate     DateTime?
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @db.ObjectId
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Status {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}

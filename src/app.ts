@@ -32,6 +32,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(requestLogger);
 
 app.use(
@@ -43,7 +44,6 @@ app.use(
   })
 );
 
-app.use(cookieParser());
 app.use(express.static("public"));
 
 app.use(helmet());

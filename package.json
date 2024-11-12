@@ -21,6 +21,7 @@
     "csrf": "^3.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-flash": "^0.0.2",
     "express-session": "^1.18.1",
     "helmet": "^8.0.0",
     "joi": "^17.13.3",
@@ -29,7 +30,9 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
+    "@types/express-flash": "^0.0.5",
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",

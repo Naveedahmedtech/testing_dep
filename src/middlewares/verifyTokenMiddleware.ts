@@ -1,17 +1,18 @@
-import { IGetUserAuthInfoRequest } from "../types";
 import { isDecodedWithId } from "../utils/checkDecoded";
 import { sendErrorResponse } from "../utils/responseHandler";
-import { Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { ACCESS_CONTROL } from "../constants/routePaths";
 import prisma from "../prisma";
 import { ENV } from "../constants";
 
+
 export const verifyTokenMiddleware = async (
-  req: IGetUserAuthInfoRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  
   const token = req.cookies?.accessToken;
   if (!token) {
     return sendErrorResponse(res, "Access token is not provided.", 401);
@@ -42,7 +43,7 @@ export const verifyTokenMiddleware = async (
       const userRole = user.role.name;
       const endpointKey = `${req.method} ${req.baseUrl}${req.path}`;
       const allowedRoles = ACCESS_CONTROL[endpointKey] || [];
-      console.log(",********",  endpointKey, allowedRoles, userRole);
+      console.log(",********", endpointKey, allowedRoles, userRole);
       if (allowedRoles.length && !allowedRoles.includes(userRole)) {
         return sendErrorResponse(
           res,

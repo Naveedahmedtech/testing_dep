@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "*",
+      "http://localhost",
       "http://localhost:5173",
       "https://naveed-task-manager.netlify.app",
     ],
@@ -40,9 +40,14 @@ app.use(
     secret: "session-secret-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === "production" },
+    cookie: {
+      secure: process.env.NODE_ENV === "production", 
+      httpOnly: true, 
+      sameSite: "lax", 
+    },
   })
 );
+
 
 app.use(express.static("public"));
 
